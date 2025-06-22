@@ -20,6 +20,7 @@ const TaskListTable = ({tableData}) => {
             default: return 'bg-gray-100 text-gray-500 border border-gray-200'
         }
     }
+    
   return (
     <div className='overflow-x-auto p-0 rounded-lg mt-3'>
       <table className='min-w-full'>
