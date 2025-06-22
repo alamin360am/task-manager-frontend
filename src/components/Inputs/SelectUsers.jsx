@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
 import { LuUsers } from 'react-icons/lu';
 import Modal from '../Modal';
 import AvatarGroup from '../AvatarGroup';
+import { LoadingContext } from '../../context/loadingContext';
 
 const SelectUsers = ({selectedUsers, setSelectedUsers}) => {
     const [allUsers, setAllUsers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [tampSelectedUsers, setTampSelectedUsers] = useState([]);
 
+    const {setLoading} = useContext(LoadingContext);
+
     const getAllUsers = async () => {
+      setLoading(true);
         try {
             const response = await axiosInstance.get(API_PATHS.USERS.GET_ALL_USERS);
             if(response.data?.length > 0) {
@@ -18,6 +22,8 @@ const SelectUsers = ({selectedUsers, setSelectedUsers}) => {
             }
         } catch (error) {
             console.error("Error fetching users:", error);
+        } finally {
+          setLoading(false);
         }
     }
 

@@ -23,7 +23,6 @@ const UserCard = ({userInfo}) => {
          count={userInfo?.pendingTask || 0}
          status="Pending"
         />
-        {/* TODO: Pending task number is always 0, never change. some problem in backend */}
         <StatCard
          label="In Progress"
          count={userInfo?.inProgressTask || 0}

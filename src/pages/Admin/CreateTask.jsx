@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import DashboardLayout from '../../components/layouts/DashboardLayout'
 import {PRIORITY_DATA} from '../../utils/data'
 import axiosInstance from '../../utils/axiosInstance'
@@ -13,6 +13,7 @@ import TodoListInput from '../../components/Inputs/TodoListInput'
 import AddAttachmentsInput from '../../components/Inputs/AddAttachmentsInput'
 import Modal from '../../components/Modal'
 import DeleteAlert from '../../components/DeleteAlert'
+import { LoadingContext } from '../../context/loadingContext'
 
 const CreateTask = () => {
   const location = useLocation();
@@ -31,8 +32,9 @@ const CreateTask = () => {
 
   const [currentTask, setCurrentTask] = useState(null);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
+
+  const {loading, setLoading} = useContext(LoadingContext);
 
   const handleValueChange = (key, value) => {
     setTaskData((prevData) => ({...prevData, [key]: value}));
@@ -146,6 +148,7 @@ const CreateTask = () => {
   };
 
   const getTaskDetailsByID = async () => {
+    setLoading(true);
   try {
     const response = await axiosInstance.get(
       API_PATHS.TASKS.GET_TASK_BY_ID(taskId)
@@ -186,10 +189,13 @@ const CreateTask = () => {
     
   } catch (error) {
     console.error("Error fetching users:", error);
+  } finally {
+    setLoading(false);
   }
 };
 
   const deleteTask = async () => {
+    setLoading(true);
     try {
       await axiosInstance.delete(API_PATHS.TASKS.DELETE_TASK(taskId));
       setOpenDeleteAlert(false);
@@ -200,6 +206,8 @@ const CreateTask = () => {
 
     } catch (error) {
       console.error("Error deleting expense:", error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
     }
   };
 

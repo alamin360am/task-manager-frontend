@@ -1,5 +1,5 @@
-export const BASE_URL = "http://localhost:8000";
-// export const BASE_URL = "https://task-manager-backend-auir.onrender.com";
+// export const BASE_URL = "http://localhost:8000";
+export const BASE_URL = "https://task-manager-backend-auir.onrender.com";
 
 // utils/apiPaths.js
 export const API_PATHS = {
