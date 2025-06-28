@@ -1,22 +1,21 @@
-import React from 'react';
+import React from 'react'
 
 const Loader = () => {
   return (
-    <div className="flex justify-center items-center h-screen w-screen">
+    <div className="flex justify-center items-center h-full w-full">
       <div className="relative w-24 h-24">
         {[...Array(10)].map((_, i) => (
-          <div 
+          <div
             key={i}
-            className="absolute w-1 h-6 bg-blue-400 rounded-b-full 
-                      animate-rain opacity-80"
+            className="absolute w-1 h-6 bg-blue-400 rounded-b-full animate-rain opacity-80"
             style={{
               left: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 1}s`,
-              animationDuration: `${0.5 + Math.random() * 1}s`
+              animationDuration: `${0.5 + Math.random() * 1}s`,
             }}
-          ></div>
+          />
         ))}
-        <style jsx>{`
+        <style>{`
           @keyframes rain {
             0% { transform: translateY(-20px); opacity: 0; }
             20% { opacity: 1; }
@@ -28,7 +27,7 @@ const Loader = () => {
         `}</style>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Loader;
+export default Loader

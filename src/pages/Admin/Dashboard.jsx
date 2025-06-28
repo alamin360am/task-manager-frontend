@@ -13,6 +13,8 @@ import TaskListTable from '../../components/TaskListTable';
 import CustomPaiChart from '../../components/Charts/CustomPaiChart';
 import CustomBarChart from '../../components/Charts/CustomBarChart';
 import GreetingDisplay from '../../components/GreetingDisplay';
+import { LoadingContext } from '../../context/loadingContext';
+import Loader from '../../components/Loader';
 
 const COLORS = ["#8D51FF", "#00B8DB", "#7BCE00"];
 
@@ -25,6 +27,7 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [paiChartData, setPaiChartData] = useState([]);
   const [barChartData, setBarChartData] = useState([]);
+  const { loading, setLoading } = useContext(LoadingContext);
 
   const prepareChartData = data => {
     const taskDistribution = data?.taskDistribution || null;
@@ -49,6 +52,7 @@ const Dashboard = () => {
 
   const getDashboardData = async () => {
     try {
+      setLoading(true);
       const response = await axiosInstance.get(API_PATHS.TASKS.GET_DASHBOARD_DATA);
       if(response.data) {
         setDashboardData(response.data);
@@ -56,6 +60,8 @@ const Dashboard = () => {
       }
     } catch (error) {
       console.error("Error fetching users", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,6 +84,7 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {loading ? <Loader /> : (
         <div className='grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mt-5'>
           <InfoCard
            label="Total Tasks"
@@ -104,43 +111,44 @@ const Dashboard = () => {
           />
 
         </div>
+        )}
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6'>
 
-        <div>
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <h5 className='font-medium'>Task Distribution</h5>
-            </div>
-            <CustomPaiChart
-              data={paiChartData}
-              colors={COLORS}   
-            />
+      <div>
+        <div className="card">
+          <div className="flex items-center justify-between">
+            <h5 className='font-medium'>Task Distribution</h5>
           </div>
+          <CustomPaiChart
+            data={paiChartData}
+            colors={COLORS}   
+          />
         </div>
+      </div>
 
-        <div>
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <h5 className='font-medium'>Task Priority Levels</h5>
-            </div>
-            <CustomBarChart
-              data={barChartData}
-            />
+      <div>
+        <div className="card">
+          <div className="flex items-center justify-between">
+            <h5 className='font-medium'>Task Priority Levels</h5>
           </div>
+          <CustomBarChart
+            data={barChartData}
+          />
         </div>
+      </div>
 
-        <div className='md:col-span-2'>
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <h5 className='text-lg'>Recent Task</h5>
-              <button className='card-btn' onClick={onSeeMore}>See All <LuArrowRight className='text-base' /></button>
-            </div>
-
-            <TaskListTable tableData={dashboardData?.recentTasks || []} />
+      <div className='md:col-span-2'>
+        <div className="card">
+          <div className="flex items-center justify-between">
+            <h5 className='text-lg'>Recent Task</h5>
+            <button className='card-btn' onClick={onSeeMore}>See All <LuArrowRight className='text-base' /></button>
           </div>
+
+          <TaskListTable tableData={dashboardData?.recentTasks || []} />
         </div>
+      </div>
       </div>
     </DashboardLayout>
   )

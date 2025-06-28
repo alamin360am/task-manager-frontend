@@ -7,6 +7,7 @@ import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
 import {UserContext} from '../../context/userContext'
 import { LoadingContext } from '../../context/loadingContext';
+import Loader from '../../components/Loader';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ const Login = () => {
   const [error, setError] = useState(null);
 
   const {updatedUser} = useContext(UserContext);
-  const {setLoading} = useContext(LoadingContext);
+  const {loading, setLoading} = useContext(LoadingContext);
 
   const navigate = useNavigate();
 
@@ -32,11 +33,10 @@ const Login = () => {
     }
 
     setError("");
-
-    setLoading(true);
-
+    
     // Log In API
     try {
+      setLoading(true);
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {email, password});
 
       const {token, role} = response.data;
@@ -62,7 +62,9 @@ const Login = () => {
 
   }
 
-  return (
+  return loading ? (
+    <div className='w-screen h-screen'><Loader /> </div>
+  ) : (
     <AuthLayout>
       <div className='lg:w-[70%] h-3/4 md:h-full flex flex-col justify-center'>
         <h3 className='text-xl font-semibold text-black'>Welcome Back</h3>

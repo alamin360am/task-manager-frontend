@@ -5,10 +5,10 @@ const TodoListInput = ({todoList, setTodoList}) => {
     const [option, setOption] = useState("");
 
     const handleAddOption = () => {
-        if(option.trim()) {
-            setTodoList([...todoList, option.trim()]);
-            setOption("");
-        }
+      if(option.trim()) {
+          setTodoList([...todoList, option.trim()]);
+          setOption("");
+      }
     }
 
     const handleDeleteOption = index => {

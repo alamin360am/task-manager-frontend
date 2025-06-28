@@ -13,6 +13,8 @@ import TaskListTable from '../../components/TaskListTable';
 import CustomPaiChart from '../../components/Charts/CustomPaiChart';
 import CustomBarChart from '../../components/Charts/CustomBarChart';
 import GreetingDisplay from '../../components/GreetingDisplay';
+import { LoadingContext } from '../../context/loadingContext';
+import Loader from '../../components/Loader';
 
 const COLORS = ["#8D51FF", "#00B8DB", "#7BCE00"];
 
@@ -20,6 +22,7 @@ const UserDashboard = () => {
   useUserAuth();
 
   const {user} = useContext(UserContext);
+  const {loading, setLoading} = useContext(LoadingContext);
   const navigate = useNavigate();
 
   const [dashboardData, setDashboardData] = useState(null);
@@ -49,6 +52,7 @@ const UserDashboard = () => {
 
   const getDashboardData = async () => {
     try {
+      setLoading(true)
       const response = await axiosInstance.get(API_PATHS.TASKS.GET_USER_DASHBOARD_DATA);
       if(response.data) {
         setDashboardData(response.data);
@@ -56,6 +60,8 @@ const UserDashboard = () => {
       }
     } catch (error) {
       console.error("Error fetching users", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,6 +84,7 @@ const UserDashboard = () => {
           </div>
         </div>
 
+        {loading ? <Loader /> : (
         <div className='grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mt-5'>
           <InfoCard
            label="Total Tasks"
@@ -104,6 +111,7 @@ const UserDashboard = () => {
           />
 
         </div>
+        )}
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6'>
@@ -131,6 +139,7 @@ const UserDashboard = () => {
           </div>
         </div>
 
+        {loading ? <Loader /> : (
         <div className='md:col-span-2'>
           <div className="card">
             <div className="flex items-center justify-between">
@@ -141,6 +150,7 @@ const UserDashboard = () => {
             <TaskListTable tableData={dashboardData?.recentTasks || []} />
           </div>
         </div>
+        )}
       </div>
     </DashboardLayout>
   )

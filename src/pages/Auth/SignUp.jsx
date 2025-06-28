@@ -8,6 +8,8 @@ import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
 import { UserContext } from '../../context/userContext';
 import uploadImage from '../../utils/uploadImage';
+import { LoadingContext } from '../../context/loadingContext';
+import Loader from '../../components/Loader';
 
 const SignUp = () => {
   const [profilePic, setProfilePic] = useState(null);
@@ -19,6 +21,8 @@ const SignUp = () => {
 
   const navigate = useNavigate();
   const {updatedUser} = useContext(UserContext);
+
+  const {loading, setLoading} = useContext(LoadingContext);
 
   const handleSignUp = async(e) => {
     e.preventDefault();
@@ -44,12 +48,12 @@ const SignUp = () => {
     // SignUp API
     try {
       // upload image if presents
+      setLoading(true);
       if (profilePic) {
         const imageUploadRes = await uploadImage(profilePic);
         profileImageUrl = imageUploadRes || "";
       }
       
-
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         name: fullName,
         email,
@@ -75,11 +79,15 @@ const SignUp = () => {
       } else {
         setError("Something wrong. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
 
   }
 
-  return (
+  return loading ? (
+    <div className='w-screen h-screen'> <Loader /> </div>
+  ) : (
     <AuthLayout>
       <div className='lg:w-full h-auto md:h-full mt-10 md:mt-0 flex flex-col justify-center'>
         <h3 className='text-xl font-semibold text-black'>Create an Account</h3>

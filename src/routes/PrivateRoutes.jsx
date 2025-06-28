@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
+import Loader from '../components/Loader';
 
 const PrivateRoutes = ({ allowedRoles }) => {
   const { user, loading } = useContext(UserContext);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader />;
 
   if (!user) {
     // লগইন না থাকলে লগইন পেজে পাঠাবে

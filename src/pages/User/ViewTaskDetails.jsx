@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
@@ -6,10 +6,14 @@ import DashboardLayout from '../../components/layouts/DashboardLayout';
 import moment from 'moment';
 import AvatarGroup from '../../components/AvatarGroup';
 import {LuSquareArrowOutUpRight} from 'react-icons/lu'
+import { LoadingContext } from '../../context/loadingContext';
+import Loader from '../../components/Loader';
 
 const ViewTaskDetails = () => {
   const {id} = useParams();
   const [task, setTask] = useState(null);
+
+  const {loading, setLoading} = useContext(LoadingContext);
 
   const getStatusTagColor = (status) => {
         switch (status) {
@@ -21,6 +25,7 @@ const ViewTaskDetails = () => {
 
   const getTaskDetailsByID = async () => {
     try {
+      setLoading(true);
       const response = await axiosInstance.get(API_PATHS.TASKS.GET_TASK_BY_ID(id));
 
       if(response.data) {
@@ -29,6 +34,8 @@ const ViewTaskDetails = () => {
       }
     } catch (error) {
       console.error("Error fetching data", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,7 +76,11 @@ const ViewTaskDetails = () => {
   return (
     <DashboardLayout activeMenu={"My Tasks"}>
       <div className='mt-5'>
-        {task && (
+        {loading ? (
+          <div className='h-screen'>
+            <Loader />
+          </div>
+        ) : task && (
           <div className='grid grid-cols-1 md:grid-cols-4 mt-4'>
             <div className='form-card col-span-3'>
               <div className='flex items-center justify-between'>

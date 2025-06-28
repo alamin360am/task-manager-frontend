@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import {LuChevronDown} from 'react-icons/lu'
 
+// TODO: Set dropdown close while click outside dropdown
 const SelectDropdown = ({options, placeholder, value, onChange}) => {
     const [isOpen, setIsOpen] = useState(false);
 
